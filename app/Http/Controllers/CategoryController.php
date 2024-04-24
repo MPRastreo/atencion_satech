@@ -6,7 +6,12 @@ use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -39,7 +44,33 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try 
+        {
+            $request->validate
+            (
+                [
+                    'name' => 'required|string|unique:contents|min:3',
+                    'description' => 'required|string|min:10',
+                ]
+            );
+
+            $category = new Category();
+            $category->name = $request->name;
+            $category->description = $request->description;
+            $category->slug = Str::lower(str_replace('/[^a-z]+/i','-', $request->name));
+            $category->save();
+
+            return response()->json(['message' => '¡Categoría creada exitosamente!'], HttpResponse::HTTP_OK);
+        } 
+        catch (ValidationException $vex)
+        {
+            return response()->json($vex->errors(), HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        catch (Exception $ex) 
+        {
+            Log::error($ex->getMessage());
+            return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
