@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,9 +16,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        Category::create
+        (
+            // * Descomentar de uno por uno
+
+            // [
+            //     "name"=> "Comandos",
+            //     "slug"=> "commands",
+            //     "description"=> "Uso y manejo de comandos en plataforma",
+            // ]
+            // [
+            //     "name"=> "Unidades",
+            //     "slug"=> "unidades",
+            //     "description"=> "Información sobre unidades"
+            // ],
+            // [
+            //     "name"=> "Informes",
+            //     "slug"=> "informes",
+            //     "description"=> "Contenido visual sobre la generación de informes"
+            // ],
+        );
     }
 }
