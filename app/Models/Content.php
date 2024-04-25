@@ -14,7 +14,7 @@ class Content extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = 
+    protected $fillable =
     [
         'category_id',
         'title',

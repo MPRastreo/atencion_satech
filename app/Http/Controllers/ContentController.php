@@ -9,10 +9,11 @@ use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Facades\File;
 
 class ContentController extends Controller
 {
+    private const rutavideo = "public/videos/";
     /**
      * Display a listing of the resource.
      */
@@ -34,17 +35,17 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-        try 
-        {
-            $request->validate
-            (
-                [
-                    'category_id' => 'required|integer',
-                    'title' => 'required|string|unique:contents',
-                    'description' => 'required|string',
-                    'video' => 'required|file|mimes:mp4,mov,avi,flv|max:204800'
-                ]
-            );
+        $vid = "";
+
+        try {
+            $request->validate(
+                    [
+                        'category_id' => 'required|integer',
+                        'title' => 'required|string|unique:contents',
+                        'description' => 'required|string',
+                        'video' => 'required|file|mimes:mp4,mov,avi,flv|max:204800'
+                    ]
+                );
 
             if (!$request->hasFile('video'))
                 return response()->json(["message" => "Upload failed!"], HttpResponse::HTTP_BAD_REQUEST);
@@ -53,29 +54,28 @@ class ContentController extends Controller
 
             $video = $request->file('video');
             $filename = time() . '.' . $video->getClientOriginalExtension();
-            $video->move(public_path('videos'), $filename);
-            $path = '/videos/'.$filename;
-            
-            Content::create
-            ([
-                'category_id' => $request->category_id,
-                'title' => $request->title,
-                'description' => $request->description,
-                'filepath' => $path,
-            ]);            
+            $vid = $filename;
+            $video->move(base_path(self::rutavideo), $filename);
+            $path = $vid . $filename;
+
+            Content::create([
+                    'category_id' => $request->category_id,
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'failepath' => $path,
+                ]);
 
             DB::commit();
 
             return response()->json(['message' => 'Video cargado exitosamente', 'path' => $path], HttpResponse::HTTP_OK);
-        } 
-        catch (ValidationException $vex)
-        {
+        } catch (ValidationException $vex) {
             return response()->json($vex->errors(), HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        catch (Exception $ex) 
-        {
+        } catch (Exception $ex) {
             DB::rollBack();
-            Log::error($ex->getTraceAsString());
+            if (file_exists(base_path(self::rutavideo) . $vid)) {
+                File::delete(base_path(self::rutavideo) . $vid);
+            }
+            Log::error($ex->getMessage());
             return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
