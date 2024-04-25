@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Category;
 use App\Models\Content;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
@@ -13,14 +14,14 @@ Route::get('/', function ()
 {
     try
     {
-        $content = Content::all();
-        return Inertia::render('Content', ['content' => $content]);
+        $categories = Category::with('contents')->get();
+        return Inertia::render('Home/Index', ['categories' => $categories]);
     }
     catch (Exception $ex)
     {
         abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
     }
-});
+})->name('index');
 
 Route::middleware('auth')->group(function ()
 {

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 
 class Category extends Model
 {
@@ -21,9 +23,8 @@ class Category extends Model
         'description',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    public function contents(): HasMany
+    {
+        return $this->hasMany(Content::class, 'category_id', 'id');
+    }
 }

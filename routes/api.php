@@ -8,4 +8,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::resource('content', ContentController::class)->only('index', 'store', 'show');
+// Route::resource('content', ContentController::class)->only('index', 'store', 'show');

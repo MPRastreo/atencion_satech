@@ -14,4 +14,19 @@ export interface Category {
     name: string;
     description: string;
     slug: string;
+    created_at: string;
+    updated_at: string;
+    contents?: Content[];
+}
+
+export interface Content {
+    id: number;
+    category_id: number;
+    title: string;
+    description: string;
+    thumbnail: string;
+    filepath: string;
+    created_at: string;
+    updated_at: string;
+    category?: Category;
 }

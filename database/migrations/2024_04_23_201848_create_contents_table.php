@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('category_id');
             $table->string('title');
             $table->string('description');
+            $table->longText('thumbnail');
             $table->string('filepath');
             $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
