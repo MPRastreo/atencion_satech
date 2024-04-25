@@ -14,9 +14,9 @@ class Content extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = 
+    protected $fillable =
     [
-        'category',
+        'category_id',
         'title',
         'description',
         'filepath',

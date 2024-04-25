@@ -9,20 +9,20 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () 
+Route::get('/', function ()
 {
-    try 
+    try
     {
         $content = Content::all();
         return Inertia::render('Content', ['content' => $content]);
-    } 
-    catch (Exception $ex) 
+    }
+    catch (Exception $ex)
     {
         abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
     }
 });
 
-Route::middleware('auth')->group(function () 
+Route::middleware('auth')->group(function ()
 {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

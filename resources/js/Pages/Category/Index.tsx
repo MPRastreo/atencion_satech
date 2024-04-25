@@ -11,11 +11,11 @@ const IndexCategories = ({ auth, categories }: PageProps<{ categories: object[] 
 
     const handle = async () =>
     {
-        try 
-        {            
-            const response: any = await handleGet('https://jsonplaceholder.typicode.com/todos');
+        try
+        {
+            const response: any = await handleGet('https://jsonplceholder.typicode.com/todos');
 
-            if (response["success"]) 
+            if (response["success"])
             {
                 toast({
                     title: "Scheduled: Catch up",
@@ -29,11 +29,11 @@ const IndexCategories = ({ auth, categories }: PageProps<{ categories: object[] 
                 description: "There was a problem with your request.",
             });
             return;
-        } 
-        catch (error) 
+        }
+        catch (error)
         {
             console.log(error);
-        }   
+        }
     }
 
 
