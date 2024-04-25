@@ -1,5 +1,5 @@
 import { Category } from '@/types/global';
-import { EllipsisIcon } from 'lucide-react';
+import { EllipsisIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import * as React from "react"
 import {
     ColumnDef,
@@ -15,7 +15,7 @@ import {
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
-import { Button } from "@/Components/ui/button"
+import { Button, buttonVariants } from "@/Components/ui/button"
 import { Checkbox } from "@/Components/ui/checkbox"
 import {
     DropdownMenu,
@@ -35,6 +35,23 @@ import {
     TableHeader,
     TableRow,
 } from "@/Components/ui/table"
+import { ToastAction } from '@/Components/ui/toast';
+import { useToast } from '@/Components/ui/use-toast';
+
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog"
+import { handleDelete } from '@/utils/api-utils';
+import axios from 'axios';
+import { Link } from '@inertiajs/react';
 
 interface Props {
     categories: Category[];
@@ -42,6 +59,35 @@ interface Props {
 
 const ListCategories = ({ categories }: Props) => {
     const data: Category[] = categories;
+    const { toast } = useToast();
+
+    const deleteRecord = async (id: number) => {
+        try {
+            const response: any = await handleDelete(id, "categories");
+
+            if (response["success"]) {
+                toast({
+                    title: "¡Éxito!",
+                    description: response['data']['message'] ?? "¡Movimiento éxitoso!",
+                    action: <ToastAction altText="Aceptar" onClick={() => location.reload()}>Aceptar</ToastAction>,
+                })
+                return;
+            }
+
+            toast({
+                variant: "destructive",
+                title: "¡Vaya!",
+                description: "Algo ha salido mal, intente de nuevo más tarde",
+            });
+        }
+        catch (error) {
+            toast({
+                variant: "destructive",
+                title: "¡Vaya!",
+                description: "Algo ha salido mal, tuvimos un error de conexión con el servidor",
+            });
+        }
+    }
 
     const columns: ColumnDef<Category>[] = [
         {
@@ -58,7 +104,7 @@ const ListCategories = ({ categories }: Props) => {
                 )
             },
             cell: ({ row }) => (
-                <div>{row.getValue("id")}</div>
+                <div>{parseInt(row.id) + 1}</div>
             ),
             enableHiding: false
         },
@@ -86,8 +132,7 @@ const ListCategories = ({ categories }: Props) => {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
-                const payment = row.original
-
+                const rowId: number = parseInt(row.getValue("id"));
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -98,13 +143,27 @@ const ListCategories = ({ categories }: Props) => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() => navigator.clipboard.writeText("")}
-                            >
-                                Modificar registro
-                            </DropdownMenuItem>
+                            <Link href={route("categories.edit", { id: rowId })} className={buttonVariants({ variant: "ghost" })}>Modificar registro</Link>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Eliminar registro</DropdownMenuItem>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button className="w-full bg-transparent text-black hover:bg-red-500 hover:text-white">
+                                        Eliminar registro
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>¿Está completamente seguro?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Esta acción no se puede deshacer. Esto eliminará permanentemente el registro.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => deleteRecord(rowId)}>Continuar</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )

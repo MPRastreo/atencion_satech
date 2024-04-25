@@ -28,8 +28,10 @@ export default function Login({ status, canResetPassword }: { status?: string, c
 
     return (
         <GuestLayout>
-            <Head title="Log in" />
-
+            <Head title="Inicio de sesión" />
+            <div className="flex items-center justify-center py-3">
+                <h3 className='font-bold text-lg'>Video CMS - Login</h3>
+            </div>
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
             <form onSubmit={submit}>
