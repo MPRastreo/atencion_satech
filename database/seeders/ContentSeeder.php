@@ -13,6 +13,6 @@ class ContentSeeder extends Seeder
      */
     public function run(): void
     {
-        Content::factory(50)->create();
+        Content::factory(150)->create();
     }
 }

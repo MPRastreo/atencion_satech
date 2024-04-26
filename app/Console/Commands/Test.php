@@ -26,6 +26,7 @@ class Test extends Command
      */
     public function handle()
     {
-        Content::truncate();
+        // Content::truncate();
+        Content::factory(1)->create();
     }
 }

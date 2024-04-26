@@ -15,13 +15,27 @@ Route::get('/', function ()
     try
     {
         $categories = Category::with('contents')->get();
-        return Inertia::render('Home/Index', ['categories' => $categories]);
+        $content = Content::with('category')->orderByDesc("created_at")->get();
+        return Inertia::render('Home/Index', ['categories' => $categories, 'content'=> $content]);
     }
     catch (Exception $ex)
     {
         abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
     }
 })->name('index');
+
+Route::get("/blog/{slug}", function(string $slug)
+{
+    try 
+    {
+        $categories = Category::with('contents')->get();
+        return Inertia::render('Home/Index', ['categories' => $categories]);
+    } 
+    catch (Exception $ex) 
+    {
+        abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
+    }
+})->name('category.index');
 
 Route::middleware('auth')->group(function ()
 {
@@ -30,7 +44,7 @@ Route::middleware('auth')->group(function ()
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('categories', CategoryController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
-    Route::resource('content', ContentController::class)->only('index', 'store', 'show');
+    Route::resource('content', ContentController::class)->only('index', 'store');
 });
 
 require __DIR__.'/auth.php';

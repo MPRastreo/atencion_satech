@@ -29,13 +29,13 @@ interface Props {
     categories: Category[];
 }
 
-const HomeNav = ({ categories }: Props) => {
+const BlogNav = ({ categories }: Props) => {
 
     const components: { title: string; href: string; description: string }[] = categories.map(({ name, description, slug }: Category) => ({ title: `${name.toUpperCase()[0]}${name.substring(1, name.length)}`, description: description, href: slug }));
 
     return (
         <>
-            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/100">
                 <div className="container flex h-14 max-w-screen-2xl items-center">
                     <div className="mr-4 hidden md:flex">
                         <a className="mr-6 flex items-center space-x-2" href="/">
@@ -46,7 +46,7 @@ const HomeNav = ({ categories }: Props) => {
                         <NavigationMenu>
                             <NavigationMenuList>
                                 <NavigationMenuItem>
-                                    <Link href="/">
+                                    <Link href={route('index')}>
                                         <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                             Inicio
                                         </NavigationMenuLink>
@@ -90,13 +90,13 @@ const HomeNav = ({ categories }: Props) => {
                                         <h3 className="text-xl px-6 pt-6 pb-4 font-semibold leading-none tracking-tight">Categorias</h3>
                                         <Separator className="my-2" />
                                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                                            {components.map((component) => (
+                                            {components.map(({ title, description, href: slug }) => (
                                                 <ListItem
-                                                    key={component.title}
-                                                    title={component.title}
-                                                    href={component.href}
+                                                    key={title}
+                                                    title={title}
+                                                    href={route('category.index', { slug: slug })}
                                                 >
-                                                    {component.description}
+                                                    {description}
                                                 </ListItem>
                                             ))}
                                         </ul>
@@ -144,9 +144,9 @@ const HomeNav = ({ categories }: Props) => {
                                     <AccordionContent>
                                         <ul className="list-disc space-y-4 ps-6 text-gray-600">
                                             {
-                                                components.map((component, i) => (
-                                                    <li key={`${component.title}-${i}`}>
-                                                        <Link href={component.href} className='font-medium hover:underline'>{ component.title }</Link>
+                                                components.map(({title, href: slug}, i) => (
+                                                    <li key={`${title}-${i}`}>
+                                                        <Link href={route('category.index', {slug: slug})} className='font-medium hover:underline'>{title}</Link>
                                                     </li>
                                                 ))
                                             }
@@ -189,4 +189,4 @@ const ListItem = React.forwardRef<
 })
 ListItem.displayName = "ListItem"
 
-export default HomeNav;
+export default BlogNav;
