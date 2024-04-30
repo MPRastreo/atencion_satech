@@ -6,9 +6,9 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { User } from '@/types';
 import { Toaster } from '@/Components/ui/toaster';
+import { TagIcon } from 'lucide-react';
 
-export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) 
-{
+export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
@@ -18,14 +18,12 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <div className="shrink-0 flex items-center">
-                                <Link href="/">
-                                    <img src='/assets/img/logo/satech_logo_lg.png' className="block h-8 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                                </Link>
+                                <img src='/assets/img/logo/satech_logo_lg.png' className="block h-8 w-auto fill-current text-gray-800 dark:text-gray-200" />
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('categories.index')} active={route().current('categories.index')}>
-                                    Categorias
+                                <NavLink href={route('categories.index')} active={route().current('categories.index') || route().current('categories.edit')}>
+                                    Categorias&nbsp;&nbsp;<TagIcon className='w-3 h-3' />
                                 </NavLink>
                             </div>
                         </div>
@@ -58,9 +56,9 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+                                        <Dropdown.Link href={route('profile.edit')}>Perfil</Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
+                                            Cerrar sesi&oacute;n
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -95,7 +93,7 @@ export default function Authenticated({ user, header, children }: PropsWithChild
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('categories.index')} active={route().current('categories.index')}>
+                        <ResponsiveNavLink href={route('categories.index')} active={route().current('categories.index') || route().current('categories.edit')}>
                             Categorias
                         </ResponsiveNavLink>
                     </div>
@@ -109,7 +107,7 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('profile.edit')}>Perfil</ResponsiveNavLink>
                             <ResponsiveNavLink method="post" href={route('logout')} as="button">
                                 Cerrar sesi&oacute;n
                             </ResponsiveNavLink>

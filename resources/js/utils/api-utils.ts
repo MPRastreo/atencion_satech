@@ -68,7 +68,7 @@ const handleDelete = async (id: number, endpoint: string) : Promise<object> =>
     {
         const response: AxiosResponse = await axios.delete(route(`${endpoint}.destroy`, { id: id }));
         const { status, data: responseData } = response;
-
+        
         if (Object.is(status, HttpStatusCode.Ok)) 
         {
             return {"success": true, "status": status, "data": responseData};

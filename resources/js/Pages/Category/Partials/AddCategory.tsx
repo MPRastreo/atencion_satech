@@ -10,10 +10,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Textarea } from '@/Components/ui/textarea';
+import { ToastAction } from '@/Components/ui/toast';
 
 const formSchema = z.object({
     name: z.string().min(3, {
-        message: "El nombre debe tener al menos 2 caracteres",
+        message: "El nombre debe tener al menos 3 caracteres",
     }),
     description: z.string().min(10, {
         message: "La descripción debe tener al menos 10 caracteres",
@@ -39,6 +40,7 @@ const AddCategory = () => {
                 name: name,
                 description: description
             };
+            form.reset();
 
             const response: any = await handlePost(data, "categories");
 
@@ -46,8 +48,8 @@ const AddCategory = () => {
                 toast({
                     title: "¡Éxito!",
                     description: response['data']['message'] ?? "¡Movimiento éxitoso!",
+                    action: <ToastAction altText="Aceptar" onClick={() => location.reload()}>Aceptar</ToastAction>,
                 })
-                form.reset();
                 return;
             }
 
@@ -108,7 +110,7 @@ const AddCategory = () => {
                             )}
                         />
                         <UIDialog.DialogFooter>
-                            <Button type="submit">Save changes&nbsp;&nbsp;<BadgeCheckIcon className='h-3.5 w-3.5'/></Button>
+                            <Button type="submit">Guardar cambios&nbsp;&nbsp;<BadgeCheckIcon className='h-3.5 w-3.5'/></Button>
                         </UIDialog.DialogFooter>
                     </form>
                 </UIForm.Form>

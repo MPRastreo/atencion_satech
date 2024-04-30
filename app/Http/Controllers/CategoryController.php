@@ -60,7 +60,7 @@ class CategoryController extends Controller
             $category->slug = Str::lower(str_replace('/[^a-z]+/i','-', $request->name));
             $category->save();
 
-            return response()->json(['message' => '¡Categoría creada exitosamente!'], HttpResponse::HTTP_OK);
+            return response()->json(['message' => 'Categoría creada exitosamente, presiona aceptar para visualizar los cambios'], HttpResponse::HTTP_OK);
         } 
         catch (ValidationException $vex)
         {
@@ -86,7 +86,19 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        try 
+        {
+            $category = Category::find($category->id);
+
+            if (!isset($category))
+                return redirect()->route('categories.index');
+
+            return Inertia::render('Category/Partials/UpdateCategories', ['category' => $category]);
+        } 
+        catch (Exception $ex) 
+        {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
+        }
     }
 
     /**
@@ -94,7 +106,37 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        try 
+        {
+            $request->validate
+            (
+                [
+                    'name' => 'required|string|min:3',
+                    'description' => 'required|string|min:10',
+                ]
+            );
+
+            $category = Category::find($category->id);
+
+            if(!isset($category))
+                return response()->json(['message' => 'El registro se eliminó o ha cambiado'], HttpResponse::HTTP_NOT_FOUND);
+
+            $category->name = $request->name;
+            $category->description = $request->description;
+            $category->slug = Str::lower(str_replace('/[^a-z]+/i','-', $request->name));
+            $category->save();
+
+            return response()->json(['message' => 'Categoría actualizada exitosamente, presiona aceptar para visualizar los cambios'], HttpResponse::HTTP_OK);
+        } 
+        catch (ValidationException $vex)
+        {
+            return response()->json($vex->errors(), HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        catch (Exception $ex) 
+        {
+            Log::error($ex->getMessage());
+            return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -102,6 +144,15 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        try 
+        {
+            $category->delete();  
+            return response()->json(['message' => 'Categoría eliminada exitosamente, presiona aceptar para visualizar los cambios'], HttpResponse::HTTP_OK);
+        }
+        catch (Exception $ex) 
+        {
+            Log::error($ex->getMessage());
+            return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }   
     }
 }

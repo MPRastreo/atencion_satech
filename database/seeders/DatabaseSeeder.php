@@ -15,26 +15,5 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
-        Category::create
-        (
-            // * Descomentar de uno por uno
-
-            // [
-            //     "name"=> "Comandos",
-            //     "slug"=> "commands",
-            //     "description"=> "Uso y manejo de comandos en plataforma",
-            // ]
-            // [
-            //     "name"=> "Unidades",
-            //     "slug"=> "unidades",
-            //     "description"=> "Información sobre unidades"
-            // ],
-            // [
-            //     "name"=> "Informes",
-            //     "slug"=> "informes",
-            //     "description"=> "Contenido visual sobre la generación de informes"
-            // ],
-        );
     }
 }

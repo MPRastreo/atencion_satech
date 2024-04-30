@@ -3,24 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Content;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get('/', function ()
-{
-    try
-    {
-        $content = Content::all();
-        return Inertia::render('Content', ['content' => $content]);
-    }
-    catch (Exception $ex)
-    {
-        abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
-    }
-});
 
 Route::middleware('auth')->group(function ()
 {
@@ -29,7 +12,8 @@ Route::middleware('auth')->group(function ()
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('categories', CategoryController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
-    Route::resource('content', ContentController::class)->only('index', 'store', 'show');
+    Route::resource('content', ContentController::class)->only('index', 'store');
 });
 
+require __DIR__.'/home.php';
 require __DIR__.'/auth.php';

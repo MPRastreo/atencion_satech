@@ -2,22 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Content;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class UsersSeeder extends Seeder
+class ContentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        //
-        User::create([
-            "name" => "Lab Dev",
-            "email" => "lab@satech.mx",
-            "password" => "mp-rs@1234"
-        ]);
+        Content::factory(150)->create();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Content extends Model
 {
@@ -19,6 +20,7 @@ class Content extends Model
         'category_id',
         'title',
         'description',
+        'thumbnail',
         'filepath',
     ];
 
@@ -28,4 +30,9 @@ class Content extends Model
      * @var array<int, string>
      */
     protected $hidden = [];
+
+    public function category(): HasOne
+    {
+        return $this->hasOne(Category::class, 'id','category_id');
+    }
 }
