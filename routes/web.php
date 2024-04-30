@@ -3,39 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Category;
-use App\Models\Content;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get('/', function ()
-{
-    try
-    {
-        $categories = Category::with('contents')->get();
-        $content = Content::with('category')->orderByDesc("created_at")->get();
-        return Inertia::render('Home/Index', ['categories' => $categories, 'content'=> $content]);
-    }
-    catch (Exception $ex)
-    {
-        abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
-    }
-})->name('index');
-
-Route::get("/blog/{slug}", function(string $slug)
-{
-    try 
-    {
-        $categories = Category::with('contents')->get();
-        return Inertia::render('Home/Index', ['categories' => $categories]);
-    } 
-    catch (Exception $ex) 
-    {
-        abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
-    }
-})->name('category.index');
 
 Route::middleware('auth')->group(function ()
 {
@@ -47,4 +15,5 @@ Route::middleware('auth')->group(function ()
     Route::resource('content', ContentController::class)->only('index', 'store');
 });
 
+require __DIR__.'/home.php';
 require __DIR__.'/auth.php';

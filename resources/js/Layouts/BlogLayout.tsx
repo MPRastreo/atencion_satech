@@ -10,10 +10,9 @@ const BlogLayout = ({ categories, children }: PropsWithChildren<{ categories: Ca
 
     return (
         <>
-            <Head title="Home" />
             <div className="flex flex-col h-screen justify-between">
                 <BlogNav categories={categories} />
-                <main className="mb-auto px-10 py-5">
+                <main>
                     {children}
                 </main>
                 <BlogFooter />

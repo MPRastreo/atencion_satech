@@ -29,8 +29,10 @@ export default function Login({ status, canResetPassword }: { status?: string, c
     return (
         <GuestLayout>
             <Head title="Inicio de sesión" />
-            <div className="flex items-center justify-center py-3">
-                <h3 className='font-bold text-lg'>Video CMS - Login</h3>
+            <div className="flex items-center justify-start mb-4">
+                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                    Login
+                </h3>
             </div>
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
@@ -89,7 +91,7 @@ export default function Login({ status, canResetPassword }: { status?: string, c
                         </Link>
                     )} */}
 
-                    <Button disabled={processing} variant='default'>Iniciar sesi&oacute;n</Button>
+                    <Button disabled={processing} variant='default'>Acceder</Button>
                 </div>
             </form>
         </GuestLayout>

@@ -46,10 +46,8 @@ const BlogNav = ({ categories }: Props) => {
                         <NavigationMenu>
                             <NavigationMenuList>
                                 <NavigationMenuItem>
-                                    <Link href={route('index')}>
-                                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                                            Inicio
-                                        </NavigationMenuLink>
+                                    <Link href={route('index')} className='class="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"'>
+                                        Inicio
                                     </Link>
                                 </NavigationMenuItem>
                                 <NavigationMenuItem>
@@ -144,9 +142,9 @@ const BlogNav = ({ categories }: Props) => {
                                     <AccordionContent>
                                         <ul className="list-disc space-y-4 ps-6 text-gray-600">
                                             {
-                                                components.map(({title, href: slug}, i) => (
+                                                components.map(({ title, href: slug }, i) => (
                                                     <li key={`${title}-${i}`}>
-                                                        <Link href={route('category.index', {slug: slug})} className='font-medium hover:underline'>{title}</Link>
+                                                        <Link href={route('category.index', { slug: slug })} className='font-medium hover:underline'>{title}</Link>
                                                     </li>
                                                 ))
                                             }
