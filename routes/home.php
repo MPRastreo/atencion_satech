@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\FeedbackController;
 use App\Models\Category;
 use App\Models\Content;
+use App\Services\LogService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +19,9 @@ Route::get('/', function ()
     }
     catch (Exception $ex)
     {
+        LogService::sendToLog($ex->getMessage());
+        Log::error($ex->getMessage());
+        Log::error($ex->getTraceAsString());
         abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
     }
 })->name('index');
@@ -37,6 +42,9 @@ Route::get("/blog/{slug}", function(string $slug)
     } 
     catch (Exception $ex) 
     {
+        LogService::sendToLog($ex->getMessage());
+        Log::error($ex->getMessage());
+        Log::error($ex->getTraceAsString());
         abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
     }
 })->name('category.index');
@@ -58,6 +66,11 @@ Route::get("/blog/{slug}/{id}", function(string $slug, string $id)
     } 
     catch (Exception $ex) 
     {
+        LogService::sendToLog($ex->getMessage());
+        Log::error($ex->getMessage());
+        Log::error($ex->getTraceAsString());
         abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
     }
 })->name('content.detail');
+
+Route::resource('feedback', FeedbackController::class)->only('store');

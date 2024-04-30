@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Category;
 use App\Models\Content;
 use Illuminate\Console\Command;
 
@@ -28,5 +29,14 @@ class Test extends Command
     {
         // Content::truncate();
         Content::factory(5)->create();
+
+        // Category::create
+        // (
+        //     [
+        //         "name"=> "Fuel",
+        //         "slug"=> "fuel",
+        //         "description"=> "Contenido visual acerca del manejo de combustible en la App SATECH",
+        //     ]
+        // );
     }
 }

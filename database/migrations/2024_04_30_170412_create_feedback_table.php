@@ -15,9 +15,10 @@ return new class extends Migration
         {
             $table->id();
             $table->string('full_name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('phone_number');
             $table->string('message');
+            $table->boolean('seen')->default(false);
             $table->timestamps();
         });
     }

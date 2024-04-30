@@ -3,27 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Feedback;
+use App\Services\LogService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class FeedbackController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() : Response
     {
         try 
         {
-            $records = Feedback::all();
+            $records = Feedback::orderBy('created_at')->get();
             return Inertia::render('Feedback/Index', ['records' => $records]);
         } 
         catch (Exception $ex) 
         {
+            LogService::sendToLog($ex->getMessage());
+            Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             abort(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
         }
     }
@@ -39,7 +45,7 @@ class FeedbackController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         try 
         {
@@ -48,7 +54,7 @@ class FeedbackController extends Controller
                 [
                     'full_name' => 'required|string|min:5',
                     'email' => 'required|email:rfc,dns',
-                    'phone_number' => 'required|regex:/(01)[0-9]{9}/',
+                    'phone_number' => ['required', 'string', 'min:10', 'max:15', 'regex:/^\+?[0-9\s\-()]{10,}$/'],
                     'message' => 'required|string|min:20'
                 ]
             );
@@ -61,7 +67,7 @@ class FeedbackController extends Controller
                 'message' => $request->message
             ]);
 
-            return response()->json(['message' => 'Registro guardado con exito, pronto nos pondremos en contacto'], HttpResponse::HTTP_OK);
+            return response()->json(['message' => 'Registro guardado con exito, pronto nos pondremos en contacto.'], HttpResponse::HTTP_OK);
         } 
         catch (ValidationException $vex)
         {
@@ -69,7 +75,9 @@ class FeedbackController extends Controller
         }
         catch (Exception $ex) 
         {
+            LogService::sendToLog($ex->getMessage());
             Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -93,15 +101,29 @@ class FeedbackController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Feedback $feedback)
+    public function update(Request $request, Feedback $feedback) : JsonResponse
     {
-        //
+        try 
+        {
+            $dbRecord = Feedback::find($feedback->id);  
+            $dbRecord->seen = true;
+            $dbRecord->save();
+
+            return response()->json(['message' => 'Registro actualizado exitosamente, presiona aceptar para visualizar los cambios'], HttpResponse::HTTP_OK);
+        }
+        catch (Exception $ex) 
+        {
+            LogService::sendToLog($ex->getMessage());
+            Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
+            return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Feedback $feedback)
+    public function destroy(Feedback $feedback) : JsonResponse
     {
         try 
         {
@@ -110,7 +132,9 @@ class FeedbackController extends Controller
         }
         catch (Exception $ex) 
         {
+            LogService::sendToLog($ex->getMessage());
             Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

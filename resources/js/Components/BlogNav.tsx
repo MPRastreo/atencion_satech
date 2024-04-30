@@ -35,8 +35,8 @@ const BlogNav = ({ categories }: Props) => {
 
     return (
         <>
-            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/100">
-                <div className="container flex h-14 max-w-screen-2xl items-center">
+            <header className="sticky top-0 z-50 px-10 w-full border-b border-border/40 bg-background/100">
+                <div className="flex h-14 items-center">
                     <div className="mr-4 hidden md:flex">
                         <a className="mr-6 flex items-center space-x-2" href="/">
                             <div className="shrink-0 flex items-center">

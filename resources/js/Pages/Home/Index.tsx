@@ -36,7 +36,7 @@ const Home = ({ categories, content }: PageProps<{ categories: Category[], conte
                                     </div>
                                     <Link href={route('content.detail', { slug: category?.slug, id: id })}>
                                         <div className="pb-8 pt-4 px-6">
-                                            <div className="space-y-3 w-full h-72 relative">
+                                            <div className="space-y-3 w-full h-72 2xl:h-96 relative">
                                                 <div className="overflow-hidden rounded-md h-full w-full">
                                                     <img
                                                         alt="Thinking Components"
@@ -47,7 +47,7 @@ const Home = ({ categories, content }: PageProps<{ categories: Category[], conte
                                                         src={thumbnail}
                                                         style={{ color: "transparent" }}
                                                     />
-                                                    <div className="space-y-1 lg:hidden absolute p-6 bottom-0 text-white w-full h-auto">
+                                                    <div className="space-y-1 lg:hidden absolute p-6 bottom-0 text-white">
                                                         <h3 className="font-medium leading-none">{title}</h3>
                                                         <p className="text-xs text-slate-300 truncate">{description}</p>
                                                     </div>
@@ -68,7 +68,7 @@ const Home = ({ categories, content }: PageProps<{ categories: Category[], conte
                                         </h3>
                                     </div>
                                     <div className="p-6 pt-0">
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 place-items-stretch">
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 2xl:gap-6 place-items-stretch">
                                             {
                                                 filteredArticles.map(({ id, title, thumbnail, created_at }, i) =>
                                                     <Link key={`${title} - ${i}`} href={route('content.detail', { slug: category?.slug, id: id })}>
@@ -81,7 +81,7 @@ const Home = ({ categories, content }: PageProps<{ categories: Category[], conte
                                                                         height={60}
                                                                         decoding="async"
                                                                         data-nimg={1}
-                                                                        className="h-auto w-auto object-cover transition-all hover:scale-105 aspect-square"
+                                                                        className="h-auto w-auto object-cover transition-all hover:scale-110 aspect-square"
                                                                         src={thumbnail}
                                                                         style={{ color: "transparent" }}
                                                                     />

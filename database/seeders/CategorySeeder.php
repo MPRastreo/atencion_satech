@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
         (
             [
                 "name"=> "Comandos",
-                "slug"=> "commands",
+                "slug"=> "comandos",
                 "description"=> "Uso y manejo de comandos en plataforma",
             ]
         );

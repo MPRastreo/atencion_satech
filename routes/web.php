@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContentController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,7 @@ Route::middleware('auth')->group(function ()
 
     Route::resource('categories', CategoryController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
     Route::resource('content', ContentController::class)->only('index', 'store');
+    Route::resource('feedback', FeedbackController::class)->only('index', 'update', 'destroy');
 });
 
 require __DIR__.'/home.php';
