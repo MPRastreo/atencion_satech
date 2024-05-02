@@ -10,7 +10,6 @@ import {
     NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
-    navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
 import {
     Accordion,
@@ -22,7 +21,7 @@ import { Separator } from '@/Components/ui/separator';
 import { Link, Head } from '@inertiajs/react';
 import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet"
 import { Button } from '@/Components/ui/button';
-import { Menu, Package2, Search } from "lucide-react"
+import { Menu } from "lucide-react"
 
 
 interface Props {

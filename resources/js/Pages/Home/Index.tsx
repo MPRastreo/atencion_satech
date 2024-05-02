@@ -47,7 +47,7 @@ const Home = ({ categories, content }: PageProps<{ categories: Category[], conte
                                                         src={thumbnail}
                                                         style={{ color: "transparent" }}
                                                     />
-                                                    <div className="space-y-1 lg:hidden absolute p-6 bottom-0 text-white">
+                                                    <div className="space-y-1 lg:hidden absolute p-6 bottom-0 text-white w-full">
                                                         <h3 className="font-medium leading-none">{title}</h3>
                                                         <p className="text-xs text-slate-300 truncate">{description}</p>
                                                     </div>
