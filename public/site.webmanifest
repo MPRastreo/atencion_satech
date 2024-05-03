@@ -1,0 +1,42 @@
+{
+    "name": "Blog de video - SATECH",
+    "short_name": "SATECH Blog",
+    "description": "Sitio de ayuda para usuarios de la App de SATECH y otros aplicativos",
+    "theme_color": "#0F172A",
+    "background_color": "#ffffff",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/assets/img/screenshots/screenshot1.png",
+            "sizes": "1442x3203",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Login"
+        },
+        {
+            "src": "/assets/img/screenshots/screenshot2.png",
+            "sizes": "2736x1824",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Visualización de contenido"
+        }
+    ],
+    "display_override": [
+        "fullscreen",
+        "minimal-ui"
+    ],
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "start_url": "../"
+}
