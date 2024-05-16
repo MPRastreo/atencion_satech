@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Content;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\File;
+use Inertia\Inertia;
 
 class ContentController extends Controller
 {
@@ -20,6 +23,15 @@ class ContentController extends Controller
     public function index()
     {
         //
+        try{
+            $contents = Content::all();
+            $categories = Category::all();
+
+
+            return Inertia::render('Content/Index', ["contents" => $contents, "categories" => $categories]);
+        } catch(Exception $ex){
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, "Error de servidor");
+        }
     }
 
     /**
@@ -37,7 +49,7 @@ class ContentController extends Controller
     {
         $videoName = "";
 
-        try 
+        try
         {
             $request->validate
             (
@@ -73,15 +85,15 @@ class ContentController extends Controller
             DB::commit();
 
             return response()->json(['message' => 'Video cargado exitosamente', 'path' => $path], HttpResponse::HTTP_OK);
-        } 
-        catch (ValidationException $vex) 
+        }
+        catch (ValidationException $vex)
         {
             return response()->json($vex->errors(), HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
-        } 
-        catch (Exception $ex) 
+        }
+        catch (Exception $ex)
         {
             DB::rollBack();
-            if (file_exists(base_path(self::videoPath) . $videoName)) 
+            if (file_exists(base_path(self::videoPath) . $videoName))
             {
                 File::delete(base_path(self::videoPath) . $videoName);
             }

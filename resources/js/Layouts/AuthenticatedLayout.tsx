@@ -25,6 +25,9 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                 <NavLink href={route('categories.index')} active={route().current('categories.index') || route().current('categories.edit')}>
                                     Categorias&nbsp;&nbsp;<TagIcon className='w-3 h-3' />
                                 </NavLink>
+                                <NavLink href={route('content.index')} active={route().current('content.index')}>
+                                    Contenido&nbsp;&nbsp;<TagIcon className='w-3 h-3' />
+                                </NavLink>
                             </div>
                         </div>
 
@@ -95,6 +98,9 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('categories.index')} active={route().current('categories.index') || route().current('categories.edit')}>
                             Categorias
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('content.index')} active={route().current('content.index')}>
+                            Contenido
                         </ResponsiveNavLink>
                     </div>
 
