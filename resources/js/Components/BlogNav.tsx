@@ -10,7 +10,6 @@ import {
     NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
-    navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
 import {
     Accordion,
@@ -22,7 +21,7 @@ import { Separator } from '@/Components/ui/separator';
 import { Link, Head } from '@inertiajs/react';
 import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet"
 import { Button } from '@/Components/ui/button';
-import { Menu, Package2, Search } from "lucide-react"
+import { Menu } from "lucide-react"
 
 
 interface Props {
@@ -35,8 +34,8 @@ const BlogNav = ({ categories }: Props) => {
 
     return (
         <>
-            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/100">
-                <div className="container flex h-14 max-w-screen-2xl items-center">
+            <header className="sticky top-0 z-50 px-10 w-full border-b border-border/40 bg-background/100">
+                <div className="flex h-14 items-center">
                     <div className="mr-4 hidden md:flex">
                         <a className="mr-6 flex items-center space-x-2" href="/">
                             <div className="shrink-0 flex items-center">

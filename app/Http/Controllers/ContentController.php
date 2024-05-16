@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Content;
+use App\Services\LogService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http\Response;
@@ -45,7 +47,7 @@ class ContentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         $videoName = "";
 
@@ -97,7 +99,9 @@ class ContentController extends Controller
             {
                 File::delete(base_path(self::videoPath) . $videoName);
             }
+            LogService::sendToLog($ex->getMessage());
             Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

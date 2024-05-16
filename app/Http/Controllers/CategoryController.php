@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\LogService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Inertia\Response as InertiaResponse;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() : InertiaResponse
     {
         try 
         {
@@ -27,6 +29,9 @@ class CategoryController extends Controller
         } 
         catch (Exception $ex) 
         {
+            LogService::sendToLog($ex->getMessage());
+            Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
         }
     }
@@ -42,7 +47,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         try 
         {
@@ -68,7 +73,9 @@ class CategoryController extends Controller
         }
         catch (Exception $ex) 
         {
+            LogService::sendToLog($ex->getMessage());
             Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -84,7 +91,7 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(Category $category) : InertiaResponse
     {
         try 
         {
@@ -97,6 +104,9 @@ class CategoryController extends Controller
         } 
         catch (Exception $ex) 
         {
+            LogService::sendToLog($ex->getMessage());
+            Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error de servidor');
         }
     }
@@ -104,7 +114,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Category $category) : JsonResponse
     {
         try 
         {
@@ -134,7 +144,9 @@ class CategoryController extends Controller
         }
         catch (Exception $ex) 
         {
+            LogService::sendToLog($ex->getMessage());
             Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -142,7 +154,7 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category) : JsonResponse
     {
         try 
         {
@@ -151,7 +163,9 @@ class CategoryController extends Controller
         }
         catch (Exception $ex) 
         {
+            LogService::sendToLog($ex->getMessage());
             Log::error($ex->getMessage());
+            Log::error($ex->getTraceAsString());
             return response()->json(["error" => "Error de servidor, intente de nuevo más tarde"], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }   
     }

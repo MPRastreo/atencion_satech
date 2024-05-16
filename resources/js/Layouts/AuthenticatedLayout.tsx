@@ -6,7 +6,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { User } from '@/types';
 import { Toaster } from '@/Components/ui/toaster';
-import { TagIcon } from 'lucide-react';
+import { TagIcon, UserRoundPlusIcon } from 'lucide-react';
 
 export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -27,6 +27,8 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                 </NavLink>
                                 <NavLink href={route('content.index')} active={route().current('content.index')}>
                                     Contenido&nbsp;&nbsp;<TagIcon className='w-3 h-3' />
+                                <NavLink href={route('feedback.index')} active={route().current('feedback.index')}>
+                                    Peticiones&nbsp;&nbsp;<UserRoundPlusIcon className='w-3 h-3' />
                                 </NavLink>
                             </div>
                         </div>
@@ -101,6 +103,8 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('content.index')} active={route().current('content.index')}>
                             Contenido
+                        <ResponsiveNavLink href={route('feedback.index')} active={route().current('feedback.index')}>
+                            Peticiones
                         </ResponsiveNavLink>
                     </div>
 

@@ -30,3 +30,14 @@ export interface Content {
     updated_at: string;
     category?: Category;
 }
+
+export interface Feedback
+{
+    id: number;
+    full_name: string;
+    phone_number: string;
+    message: string;
+    seen: boolean;
+    created_at: string;
+    updated_at: string;
+}

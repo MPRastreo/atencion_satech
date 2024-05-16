@@ -1,6 +1,7 @@
-import { Category } from '@/types/global';
-import { EllipsisIcon } from 'lucide-react';
 import * as React from "react"
+import { Feedback } from '@/types/global';
+import { EllipsisIcon } from 'lucide-react';
+import moment from 'moment/min/moment-with-locales';
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -13,11 +14,12 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, ChevronDown } from "lucide-react"
 
 import { Button, buttonVariants } from "@/Components/ui/button"
 import {
     DropdownMenu,
+    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuLabel,
     DropdownMenuSeparator,
@@ -46,21 +48,21 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog"
-import { handleDelete } from '@/utils/api-utils';
-import axios from 'axios';
+import { handleDelete, handlePut } from '@/utils/api-utils';
 import { Link } from '@inertiajs/react';
+import { Badge } from '@/Components/ui/badge';
 
 interface Props {
-    categories: Category[];
+    records: Feedback[];
 }
 
-const ListCategories = ({ categories }: Props) => {
-    const data: Category[] = categories;
+const ListRecords = ({ records }: Props) => {
+    const data: Feedback[] = records;
     const { toast } = useToast();
 
     const deleteRecord = async (id: number) => {
         try {
-            const response: any = await handleDelete(id, "categories");
+            const response: any = await handleDelete(id, "feedback");
 
             if (response["success"]) {
                 toast({
@@ -86,7 +88,35 @@ const ListCategories = ({ categories }: Props) => {
         }
     }
 
-    const columns: ColumnDef<Category>[] = [
+    const switchRecord = async (id: number) => {
+        try {
+            const response: any = await handlePut(id, {}, "feedback");
+
+            if (response["success"]) {
+                toast({
+                    title: "¡Éxito!",
+                    description: response['data']['message'] ?? "¡Movimiento éxitoso!",
+                    action: <ToastAction altText="Aceptar" onClick={() => location.reload()}>Aceptar</ToastAction>,
+                })
+                return;
+            }
+
+            toast({
+                variant: "destructive",
+                title: "¡Vaya!",
+                description: "Algo ha salido mal, intente de nuevo más tarde",
+            });
+        }
+        catch (error) {
+            toast({
+                variant: "destructive",
+                title: "¡Vaya!",
+                description: "Algo ha salido mal, tuvimos un error de conexión con el servidor",
+            });
+        }
+    }
+
+    const columns: ColumnDef<Feedback>[] = [
         {
             accessorKey: "id",
             header: ({ column }) => {
@@ -106,24 +136,80 @@ const ListCategories = ({ categories }: Props) => {
             enableHiding: false
         },
         {
-            accessorKey: "name",
+            accessorKey: "seen",
+            header: "Estado",
+            cell: ({ row }) => {
+                const value = row.getValue("seen") ? 'gray' : 'red';
+                return (
+                    <span className={`inline-flex items-center rounded-2xl bg-${value}-50 px-2 py-1 text-xs font-medium text-${value}-700 ring-1 ring-inset ring-${value}-600/10`}>
+                        {row.getValue("seen") ? 'Atendido' : 'Pendiente'}
+                    </span>
+                )
+            },
+        },
+        {
+            accessorKey: "full_name",
             header: ({ column }) => {
                 return (
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
-                        Nombre
+                        Nombre Completo
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 )
             },
-            cell: ({ row }) => <div>{row.getValue("name")}</div>,
+            cell: ({ row }) => <div>{row.getValue("full_name")}</div>,
         },
         {
-            accessorKey: "description",
-            header: "Descripción",
-            cell: ({ row }) => <div>{row.getValue("description")}</div>,
+            accessorKey: "email",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Correo Electr&oacute;nico
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                )
+            }
+        },
+        {
+            accessorKey: "phone_number",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Tel&eacute;fono
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                )
+            },
+            cell: ({ row }) => <div>{row.getValue("phone_number")}</div>,
+        },
+        {
+            accessorKey: "message",
+            header: "Mensaje",
+            cell: ({ row }) => <div>{row.getValue("message")}</div>,
+        },
+        {
+            accessorKey: "created_at",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Fecha
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                )
+            },
+            cell: ({ row }) => <div>{moment(row.getValue("created_at")).locale('es').format('L')}</div>,
         },
         {
             id: "actions",
@@ -140,7 +226,29 @@ const ListCategories = ({ categories }: Props) => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                            <Link href={route("categories.edit", { id: rowId })} className={buttonVariants({ variant: "ghost" })}>Modificar registro</Link>
+                            {
+                                !row.getValue("seen") ?
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant='ghost' className="w-full">
+                                                Marcar como atendido
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>¿Está completamente seguro?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Esta acción no se puede deshacer. Esto cambiará permanentemente el registro.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => switchRecord(rowId)}>Continuar</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                    : null
+                            }
                             <DropdownMenuSeparator />
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
@@ -162,7 +270,7 @@ const ListCategories = ({ categories }: Props) => {
                                 </AlertDialogContent>
                             </AlertDialog>
                         </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu >
                 )
             },
         }
@@ -200,9 +308,9 @@ const ListCategories = ({ categories }: Props) => {
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filtrar por nombre..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                    value={(table.getColumn("full_name")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
+                        table.getColumn("full_name")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
                 />
@@ -281,4 +389,4 @@ const ListCategories = ({ categories }: Props) => {
     )
 }
 
-export default ListCategories;
+export default ListRecords;

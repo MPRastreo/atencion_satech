@@ -19,6 +19,7 @@ class Feedback extends Model
         'full_name',
         'email',
         'phone_number',
-        'message'
+        'message',
+        'seen'
     ];
 }
